@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuyController : MonoBehaviour
+public class GuyController : MonoBehaviour,IDamageReporter
 {
     [Header("Animation")]
     [SerializeField] AnimatorController animatorController;
@@ -20,6 +20,11 @@ public class GuyController : MonoBehaviour
     private bool canDoubleJump = false;
     private bool jumpButtonPressed = false;
 
+    [Header("Player States")]
+    public bool playerIsDead = false;
+
+    [Header("Effects")]
+    [SerializeField] GameObject damagePrefab;
 
 
     private Rigidbody2D _rigidBody2D;
@@ -31,6 +36,8 @@ public class GuyController : MonoBehaviour
     }
     void Update()
     {
+        
+
         CheckGround();
         GetControls();
         UpdateMovement();
@@ -109,5 +116,19 @@ public class GuyController : MonoBehaviour
             this.transform.rotation = Quaternion.Euler(0,180,0);
 
         }
+    }
+
+    public void TakeDamage(int damagePoints)
+    {
+
+        if (!playerIsDead) {
+            playerIsDead = true;
+            var go= Instantiate(damagePrefab, this.transform.position, Quaternion.Euler(-90,0,0));
+            Destroy(go, 2);
+            Destroy(this.gameObject);
+        }
+
+
+
     }
 }
