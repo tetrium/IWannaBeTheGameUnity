@@ -32,6 +32,9 @@ public class GuyController : MonoBehaviour,IDamageReporter
 
     [Header("Effects")]
     [SerializeField] GameObject damagePrefab;
+    [Header("Sfx")]
+    [SerializeField] AudioClip shootSfx;
+    [SerializeField] AudioClip jumpSfx;
 
 
     private Rigidbody2D _rigidBody2D;
@@ -40,6 +43,7 @@ public class GuyController : MonoBehaviour,IDamageReporter
     {
         animatorController.PlayAnimation(AnimationId.Idle);
         _rigidBody2D = GetComponent<Rigidbody2D>();
+     
     }
     void Update()
     {
@@ -60,6 +64,7 @@ public class GuyController : MonoBehaviour,IDamageReporter
     }
     IEnumerator Shoot() {
         guyIsShooting = true;
+        AudioManager.instance.PlaySfx(shootSfx);
        var projectile= Instantiate(bulletPrefab, gunPivot.position, Quaternion.identity);
         projectile.GetComponent<BulletController>().Shoot(this.transform.right* shootForce);
         Destroy(projectile.gameObject, 4);
@@ -68,7 +73,9 @@ public class GuyController : MonoBehaviour,IDamageReporter
         guyIsShooting = false;
     }
     void CheckGround() {
-        playerIsOnGround = Physics2D.Raycast(this.transform.position, Vector2.down, 0.6f, groundMask);
+        playerIsOnGround = Physics2D.Raycast(this.transform.position, Vector2.down+Vector2.right*0.03f, 0.6f, groundMask)||
+            Physics2D.Raycast(this.transform.position, Vector2.down + Vector2.left * 0.03f, 0.6f, groundMask);
+
     }
     void GetControls() {
         axisDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -85,10 +92,13 @@ public class GuyController : MonoBehaviour,IDamageReporter
     void HandleJump() {
         if (canDoubleJump && jumpButtonPressed && !playerIsOnGround) {
             _rigidBody2D.velocity = Vector2.zero;
+            AudioManager.instance.PlaySfx(jumpSfx);
+
             _rigidBody2D.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
             canDoubleJump = false;
         }
         if (jumpButtonPressed&& playerIsOnGround) {
+            AudioManager.instance.PlaySfx(jumpSfx);
 
             canDoubleJump = true;
 

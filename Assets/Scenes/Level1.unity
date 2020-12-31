@@ -2360,6 +2360,50 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!1 &614565558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 614565559}
+  - component: {fileID: 614565560}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &614565559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614565558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.4431005, y: 3.5628376, z: -18.528603}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &614565560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614565558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4bd7dc52bb179c469ccb1d36f9df1c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicLevel: {fileID: 8300000, guid: 81d3cbed738b0e84bb62eea13b20616e, type: 3}
 --- !u!1 &662596368
 GameObject:
   m_ObjectHideFlags: 0
@@ -2937,12 +2981,14 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
-  doubleJumpForce: 12
-  jumpForce: 15
+  doubleJumpForce: 13
+  jumpForce: 16
   speed: 8
   guyIsShooting: 0
   playerIsDead: 0
   damagePrefab: {fileID: 7717379014449576130, guid: f5e5349940a3d764cbf37edeb5675cc2, type: 3}
+  shootSfx: {fileID: 8300000, guid: 64d743017daf3724f81b2e2b2ce82d68, type: 3}
+  jumpSfx: {fileID: 8300000, guid: 3e12f3c8f95107f4487ed13faadda91d, type: 3}
 --- !u!1 &1722795793
 GameObject:
   m_ObjectHideFlags: 0
