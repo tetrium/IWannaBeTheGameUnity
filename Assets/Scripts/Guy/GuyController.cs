@@ -6,20 +6,27 @@ public class GuyController : MonoBehaviour,IDamageReporter
 {
     [Header("Animation")]
     [SerializeField] AnimatorController animatorController;
- 
+
+    [Header("Projectile")]
+    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] Transform gunPivot;
+    [SerializeField] float shootForce = 12;
     [Header("Movement")]
     public bool playerIsOnGround = false;
     [SerializeField] LayerMask groundMask;
     [SerializeField] float doubleJumpForce = 12;
     [SerializeField] float jumpForce = 12;
     [SerializeField] float speed = 8;
+    [Header("Player States")]
+    public bool guyIsShooting;
+
     // Controls
 
     private Vector2 axisDirection;
     private Vector2 lastAxisDirection;
     private bool canDoubleJump = false;
     private bool jumpButtonPressed = false;
-
+    private bool fireButtonPressed = false;
     [Header("Player States")]
     public bool playerIsDead = false;
 
@@ -43,15 +50,30 @@ public class GuyController : MonoBehaviour,IDamageReporter
         UpdateMovement();
         UpdateLookDirection();
         HandleJump();
+        HandleAttack();
     }
 
+    void HandleAttack() {
+        if (fireButtonPressed && !guyIsShooting) {
+            StartCoroutine(Shoot());
+        }
+    }
+    IEnumerator Shoot() {
+        guyIsShooting = true;
+       var projectile= Instantiate(bulletPrefab, gunPivot.position, Quaternion.identity);
+        projectile.GetComponent<BulletController>().Shoot(this.transform.right* shootForce);
+        Destroy(projectile.gameObject, 4);
+
+        yield return new WaitForSeconds(0.2f);
+        guyIsShooting = false;
+    }
     void CheckGround() {
         playerIsOnGround = Physics2D.Raycast(this.transform.position, Vector2.down, 0.6f, groundMask);
     }
     void GetControls() {
         axisDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         jumpButtonPressed = Input.GetButtonDown("Jump");
-
+        fireButtonPressed = Input.GetButtonDown("Fire1");
         if (Mathf.Abs(axisDirection.x) > 0) {
             lastAxisDirection.x = axisDirection.x;
         }

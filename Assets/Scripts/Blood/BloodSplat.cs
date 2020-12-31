@@ -51,7 +51,15 @@ public class BloodSplat : MonoBehaviour
             StartCoroutine(StandBy());
         }
     }
-   
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag.Equals("Ground") || collision.gameObject.tag.Equals("Spikes"))
+        {
+            StartCoroutine(StandBy());
+        }
+    }
+ 
+
     IEnumerator StandBy() {
         yield return new WaitForSeconds(Random.Range(0f, 0.1f));
         if (GetComponent<Rigidbody2D>() == null) yield return true;
