@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Spikes
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Ground
   - Player
   - Spikes
-  - 
+  - Block
   - 
   - 
   - 

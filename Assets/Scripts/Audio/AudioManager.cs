@@ -15,13 +15,16 @@ public class AudioManager : MonoBehaviour
     private float _sfxVolume = -1;
 
 
-    private static AudioManager _instance;
 
 
     [SerializeField] AudioSource audioSourceMusic;
 
     [SerializeField] AudioSource audioSourceSfx;
     private  AudioClip currentMusic;
+
+
+    private static AudioManager _instance;
+
     public static AudioManager instance {
 
         get {
@@ -65,7 +68,13 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void ChangePitchMusic() {
+        audioSourceMusic.pitch = 0.5f;
+    }
+    public void RestorePitchMusic() {
+        audioSourceMusic.pitch = 1f;
 
+    }
     public void PlaySfx(AudioClip audioClip) {
         if (audioClip != null)
         {

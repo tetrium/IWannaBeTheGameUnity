@@ -34,7 +34,7 @@ public class BulletController : MonoBehaviour
             }
 
         }
-        else if (!collisionObject.gameObject.tag.Equals("Player"))
+        else if (!collisionObject.gameObject.tag.Equals("Player")&& !collisionObject.gameObject.tag.Equals("Trap"))
         {
             var velocity = GetComponent<Rigidbody2D>().velocity;
             GetComponent<Rigidbody2D>().velocity = new Vector2(velocity.normalized.x * -1, 1) * velocity.magnitude;

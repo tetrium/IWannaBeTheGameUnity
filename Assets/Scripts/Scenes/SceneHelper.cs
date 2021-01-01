@@ -20,6 +20,9 @@ public class SceneHelper : MonoBehaviour
     public void AddNewObserver(ISceneStateReporter observer) {
         observers.Add(observer);
     }
+    public void DeleteObserver(ISceneStateReporter observer) {
+        observers.Remove(observer);
+    }
 
     // public SceneId previousScene;
     public static SceneHelper instance {
@@ -64,14 +67,17 @@ public class SceneHelper : MonoBehaviour
 
     private IEnumerator _LoadScene(SceneId sceneId)
     {
-        ReportOnStartLoadNewLevel();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneId.ToString());
-     
+        ReportOnStartLoadNewLevel();
+
+        yield return LoadingScreen.instance.ShowScreen();
+        yield return new WaitForSeconds(0.4f);
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
 
+        yield return LoadingScreen.instance.HideScreen();
 
         ReportOnNewLevelLoaded();
 

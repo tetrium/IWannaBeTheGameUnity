@@ -96,7 +96,17 @@ public class GuyController : MonoBehaviour, IDamageReporter, ISceneStateReporter
         guyIsShooting = true;
         AudioManager.instance.PlaySfx(shootSfx);
        var projectile= Instantiate(bulletPrefab, gunPivot.position, Quaternion.identity);
-        projectile.GetComponent<BulletController>().Shoot(this.transform.right* shootForce);
+
+        if (_rigidBody2D.velocity.x == 0)
+        {
+            projectile.GetComponent<BulletController>().Shoot(this.transform.right * shootForce);
+        }
+        else {
+            projectile.GetComponent<BulletController>().Shoot(this.transform.right *( shootForce+speed));
+
+        }
+
+
         Destroy(projectile.gameObject, 4);
 
         yield return new WaitForSeconds(0.2f);
@@ -187,6 +197,8 @@ public class GuyController : MonoBehaviour, IDamageReporter, ISceneStateReporter
             playerIsDead = true;
             var go= Instantiate(damagePrefab, this.transform.position, Quaternion.Euler(-90,0,0));
             Destroy(go, 2);
+            GameOverScreen.instance.ShowScreen();
+            SceneHelper.instance.DeleteObserver(this);
             Destroy(this.gameObject);
         }
 
