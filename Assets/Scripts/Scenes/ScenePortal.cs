@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,12 +14,36 @@ public class ScenePortal : MonoBehaviour
 
     [SerializeField] PortalType portalType;
 
+    [SerializeField] Transform spawnPosition;
 
 
     public PortalType GetPortalType() {
         return portalType;
     }
+    public Vector2 GetSpawnPosition()
+    {
+        return spawnPosition.position;
 
+    }
+
+    public SceneId GetSceneToLoad() {
+        var currentScene = (int)SceneHelper.instance.GetCurrentSceneId();
+
+        var sceneNameToLoad = "";
+        if (portalType == PortalType.ReturnPortal)
+        {
+            sceneNameToLoad = "Level" + (currentScene - 1);
+        }
+        if (portalType == PortalType.NextLevelPortal)
+        {
+            sceneNameToLoad = "Level" + (currentScene + 1);
+        }
+
+
+        Enum.TryParse(sceneNameToLoad, out SceneId sceneToLoad);
+
+        return sceneToLoad;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -27,18 +52,9 @@ public class ScenePortal : MonoBehaviour
         }
     }
     void StartLoadLevel() {
-        var currentScene = (int)SceneHelper.instance.GetCurrentSceneId();
+        
 
-        var sceneNameToLoad = "";
-        if (portalType == PortalType.ReturnPortal) {
-            sceneNameToLoad = "Level" + (currentScene - 1);
-        }
-        if (portalType == PortalType.NextLevelPortal)
-        {
-            sceneNameToLoad = "Level" + (currentScene + 1);
-        }
-
-        SceneHelper.instance.LoadScene(sceneNameToLoad);
+        SceneHelper.instance.LoadScene(GetSceneToLoad());
 
 
 

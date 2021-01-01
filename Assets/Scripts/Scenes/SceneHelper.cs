@@ -5,11 +5,21 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+public interface ISceneStateReporter {
+  void  OnLoadNewLevel();
+    void OnStartLoadNewLevel();
+}
 public class SceneHelper : MonoBehaviour
 {
 
     private static SceneHelper _instance;
+    private List<ISceneStateReporter> observers=new List<ISceneStateReporter>();
 
+
+    public void AddNewObserver(ISceneStateReporter observer) {
+        observers.Add(observer);
+    }
 
     // public SceneId previousScene;
     public static SceneHelper instance {
@@ -54,16 +64,32 @@ public class SceneHelper : MonoBehaviour
 
     private IEnumerator _LoadScene(SceneId sceneId)
     {
-    
+        ReportOnStartLoadNewLevel();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneId.ToString());
      
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
-       
+
+
+        ReportOnNewLevelLoaded();
 
 
 
+    }
+    void ReportOnStartLoadNewLevel()
+    {
+        foreach (var observer in observers)
+        {
+            if(observer!=null)
+            observer.OnStartLoadNewLevel();
+        }
+    }
+    void ReportOnNewLevelLoaded() {
+        foreach (var observer in observers) {
+            if (observer != null)
+                observer.OnLoadNewLevel();
+        }
     }
 }

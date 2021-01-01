@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class GuyController : MonoBehaviour,IDamageReporter
+public class GuyController : MonoBehaviour, IDamageReporter, ISceneStateReporter
 {
     [Header("Animation")]
     [SerializeField] AnimatorController animatorController;
@@ -38,9 +39,38 @@ public class GuyController : MonoBehaviour,IDamageReporter
 
 
     private Rigidbody2D _rigidBody2D;
+    public SceneId sceneFrom;
+
+    private static GuyController _instace;
+
+    public static GuyController instance {
+        get {
+            if (_instace == null) {
+                _instace = FindObjectOfType<GuyController>();
+            }
+            DontDestroyOnLoad(_instace.gameObject);
+
+            return _instace;
+        }
+        set {
+            _instace = value;
+        }
+    }
+
 
     private void Awake()
     {
+        if (instance == null) {
+            instance = this;
+            DontDestroyOnLoad(_instace.gameObject);
+        }
+
+        if (instance != null && instance != this) {
+            Destroy(this.gameObject);
+            return;
+        }
+        SceneHelper.instance.AddNewObserver(this);
+
         animatorController.PlayAnimation(AnimationId.Idle);
         _rigidBody2D = GetComponent<Rigidbody2D>();
      
@@ -161,6 +191,19 @@ public class GuyController : MonoBehaviour,IDamageReporter
         }
 
 
+
+    }
+    public void OnStartLoadNewLevel() {
+        this.transform.position = new Vector3(-10, 0, 0);
+        sceneFrom = SceneHelper.instance.GetCurrentSceneId();
+    }
+    public void OnLoadNewLevel()
+    {
+
+        var returnPortal = FindObjectsOfType<ScenePortal>().FirstOrDefault(x=>x.GetSceneToLoad()== sceneFrom);
+        if (returnPortal != null) {
+            this.transform.position = returnPortal.GetSpawnPosition();
+        }
 
     }
 }
